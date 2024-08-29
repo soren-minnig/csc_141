@@ -1,12 +1,14 @@
 '''
 
-I have limited coding experience.
+I have limited programming experience.
 
-At most, I've messed around in ren.py to make basic visual novels. I played around with different fonts, text effects, and stage directions.
+At most, I've messed around in ren.py to make basic visual novels. I played around with things such as random number generators, text effects, and positioning(for sprites).
 
-I've also used basic calls such as "label", "return", "if ___", "else", and "elif".
+I've used conditional statements(e.g. else and elif).
 
-This could help me implement them into my code in order to simplify it.
+I have also used other keywords including pass and return. I have used "true" and "false" statements.
+
+My previous experience can help me understand keywords that I've used in the past.
 
 
 '''
