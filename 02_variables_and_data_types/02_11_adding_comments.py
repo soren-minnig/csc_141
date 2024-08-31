@@ -1,0 +1,1 @@
+# I have added comments to the two previous activities describing what they do.
