@@ -1,5 +1,6 @@
 favorite_fruits = ['watermelon', 'kiwi', 'strawberry']
 
+# Conditional statements for favorite_fruits
 if 'banana' in favorite_fruits:
     print("You really like bananas!")
 if 'blueberry' in favorite_fruits:
