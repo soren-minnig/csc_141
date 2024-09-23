@@ -1,5 +1,6 @@
 age = 38
 
+# Conditional statements for age
 if age < 2:
     print("You are a baby.")
 elif age < 4:
