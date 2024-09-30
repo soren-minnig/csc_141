@@ -4,7 +4,7 @@ favorite_languages = {
     'sarah' : 'c',
     'edward' : 'rust',
     'phil' : 'python',
-}
+    }
 
 # Pending
 pending_poll = ['erin', 'john', 'jen', 'phil', 'sam']

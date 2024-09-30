@@ -1,4 +1,8 @@
-rivers = {'amazon' : 'brazil', 'nile' : 'egypt', 'yangtze' : 'china'}
+rivers = {
+    'amazon' : 'brazil', 
+    'nile' : 'egypt', 
+    'yangtze' : 'china'
+    }
 
 # Print sentence
 for river, location in rivers.items():

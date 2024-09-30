@@ -1,10 +1,12 @@
 # Original terms
-glossary = {'argument': 'a value passed to a function/method when called', 
-            'f-string': 'a string in which "f" precedes it, allowing for '
-            'replacement fields', 
-            'function': 'statements that return a value to a caller', 
-            'list': 'a Python sequence akin to an array', 
-            'slice': 'an object containing a part of a sequence'}
+glossary = {
+    'argument': 'a value passed to a function/method when called', 
+    'f-string': 'a string in which "f" precedes it, allowing for '
+    'replacement fields', 
+    'function': 'statements that return a value to a caller', 
+    'list': 'a Python sequence akin to an array', 
+    'slice': 'an object containing a part of a sequence'
+    }
 
 # Additional terms
 glossary['statement'] = 'a(n) expression/construct part of a block of code'

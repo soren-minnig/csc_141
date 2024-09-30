@@ -1,10 +1,14 @@
-favorite_numbers = {'soren': str(8), 
-                    'haley': str(4), 
-                    'anthony': str(1), 
-                    'cain': str(7), 
-                    'luna': str(5)}
+# Creating dictionary of favorite numbers
+favorite_numbers = {
+    'soren': '8', 
+    'haley': '4', 
+    'anthony': '1', 
+    'cain': '7', 
+    'luna': '5'
+    }
 
-print("Favorite numbers:\n")
+# Printing dictionary of favorite numbers
+print("\nFavorite numbers:\n")
 print("Soren: " + favorite_numbers['soren'])
 print("Haley: " + favorite_numbers['haley'])
 print("Anthony: " + favorite_numbers['anthony'])
