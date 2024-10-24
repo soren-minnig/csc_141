@@ -1,0 +1,3 @@
+In Python you can create different variables, such as strings and integers.
+In Python you can make lists and dictionaries to store information to use later.
+In Python you can use conditions to run parts of a code if requirements are met.
