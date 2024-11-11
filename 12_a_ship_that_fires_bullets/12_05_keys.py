@@ -1,3 +1,4 @@
+# 1: simple...
 import sys
 import pygame
 

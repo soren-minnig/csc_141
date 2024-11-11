@@ -1,12 +1,13 @@
+# 1: also simple
 import sys
 import pygame
 
 
 class Rocket:
-    # Class to draw the rocket
-    def __init__(self, ai_game):
-        self.screen = ai_game.screen
-        self.screen_rect = ai_game.screen.get_rect()
+    # Class to draw the "rocket" (it is not a rocket)
+    def __init__(self, game):
+        self.screen = game.screen
+        self.screen_rect = game.screen.get_rect()
 
         self.image = pygame.image.load('12_a_ship_that_fires_bullets/img/placeholder.png')
         self.rect = self.image.get_rect()

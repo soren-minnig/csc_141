@@ -1,7 +1,8 @@
-# 1: wasn't difficult since I've already done this in the alien invasion project
+# 5: was a bit challenging to figure out how I should adjust the original
 import sys
 import pygame
 from pygame.sprite import Sprite
+from random import randint
 
 
 class Star(Sprite):
@@ -26,7 +27,7 @@ class StarryNight:
 
         self.screen = pygame.display.set_mode((1200, 800))
         self.bg_color = (27, 40, 66)
-        pygame.display.set_caption('Starry Night')
+        pygame.display.set_caption('Better Starry Night')
 
         self.stars = pygame.sprite.Group()
 
@@ -60,10 +61,10 @@ class StarryNight:
         while current_y < (800 - 1 * star_height):
             while current_x < (1200 - 2 * star_width):
                 self._create_star(current_x, current_y)
-                current_x += 2 * star_width
+                current_x += randint(128, 256)
 
-            current_x = star_width
-            current_y += 2 * star_height
+            current_x = randint(32, 128)
+            current_y += randint(64, 96)
 
     def _create_star(self, x_position, y_position):
         new_star = Star(self)
