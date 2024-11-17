@@ -1,13 +1,17 @@
-# UNFINISHED
+# Should be fully operable but I will make visual changes later
 import sys
+import json
+from pathlib import Path
 import pygame
 from time import sleep
 from sprites import Player
 from enemy import Enemy
 from bullet import Bullet
+from button import Button
+from difficulty import DifficultyButton
 from config import Settings
 from stats import Stats
-from button import Button
+from scoreboard import Scoreboard
 
 
 class AlienInvasion:
@@ -27,16 +31,33 @@ class AlienInvasion:
         # self.settings.screen_height = self.screen.get_rect().height
         pygame.display.set_caption('Alien Invasion')
 
+        # Stats
         self.stats = Stats(self)
+        self.sb = Scoreboard(self)
 
+        # Sprites
         self.player = Player(self)
         self.bullets = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
 
+        # Internal
+        self.difficulty_chosen = False
         self.game_active = False
         self._create_fleet()
 
-        self.start_button = Button(self, "Start")
+        # Buttons
+        self.start_button = Button(self, 'Start')
+        self.easy_button = DifficultyButton(self, 600, 300, (0, 135, 0), 'Easy')
+        self.medium_button = DifficultyButton(self, 600, 400, (255, 194, 41), 'Medium')
+        self.hard_button = DifficultyButton(self, 600, 500, (219, 0, 22), 'Hard')
+
+        # SFX (from Sonic)
+        self.shoot_sound = pygame.mixer.Sound('alien_invasion/sfx/S1_AB.wav')
+        self.enemy_defeat_sound = pygame.mixer.Sound('alien_invasion/sfx/S1_AC.wav')
+
+        # Volume
+        self.shoot_sound.set_volume(0.25)
+        self.enemy_defeat_sound.set_volume(0.1)
 
     def run_game(self):
         while True:
@@ -54,19 +75,24 @@ class AlienInvasion:
         keys = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT or keys[pygame.K_q]:
-                sys.exit()
+                self.end_game()
             if keys[pygame.K_p]:
                 if self.game_active == False:
                     self.start()
+            if keys[pygame.K_r]:
+                if self.game_active == True:
+                    self.restart_game()
             if keys[pygame.K_SPACE]:
                 self._fire_bullet()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 self._check_start_button(mouse_pos)
+                self._check_difficulty_button(mouse_pos)
 
     def _player_hit(self):
         if self.stats.lives_left > 0:
             self.stats.lives_left -= 1
+            self.sb.prep_lives()
 
             self.bullets.empty()
             self.enemies.empty()
@@ -76,8 +102,7 @@ class AlienInvasion:
 
             sleep(0.5)
         else:
-            self.game_active = False
-            pygame.mouse.set_visible(True)
+            self.restart_game()
 
     def _fire_bullet(self):
         # Firing a bullet; if it exceed a certain limit,
@@ -85,6 +110,8 @@ class AlienInvasion:
         if len(self.bullets) < self.settings.bullets_allowed:
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
+            
+            pygame.mixer.Sound.play(self.shoot_sound)
 
     def _update_bullets(self):
         self.bullets.update()
@@ -100,9 +127,16 @@ class AlienInvasion:
         collisions = pygame.sprite.groupcollide(
                 self.bullets, self.enemies, True, True)
         
+        if collisions:
+            for enemies in collisions.values():
+                self.stats.score += self.settings.enemy_points * len(enemies)
+            self.sb.prep_score()
+            self.sb.check_high_score()
+
+            pygame.mixer.Sound.play(self.enemy_defeat_sound)
+        
         if not self.enemies:
-            self.bullets.empty()
-            self._create_fleet()
+            self.start_new_level()
 
     def _create_fleet(self):
         enemy = Enemy(self)
@@ -151,12 +185,25 @@ class AlienInvasion:
                 self._player_hit()
                 break
 
+    def _check_difficulty_button(self, mouse_pos):
+        if self.easy_button.rect.collidepoint(mouse_pos) and not self.difficulty_chosen:
+            self.settings.initialize_easy_dynamic_settings()
+            self.difficulty_chosen = True
+        if self.medium_button.rect.collidepoint(mouse_pos) and not self.difficulty_chosen:
+            self.settings.initialize_medium_dynamic_settings()
+            self.difficulty_chosen = True
+        if self.hard_button.rect.collidepoint(mouse_pos) and not self.difficulty_chosen:
+            self.settings.initialize_hard_dynamic_settings()
+            self.difficulty_chosen = True
+
     def _check_start_button(self, mouse_pos):
         if self.start_button.rect.collidepoint(mouse_pos) and not self.game_active:
-            self.start()
+            if self.difficulty_chosen:
+                self.start()
 
     def start(self):
         self.stats.reset_stats()
+        self.sb.prep_images()
         self.game_active = True
 
         self.bullets.empty()
@@ -167,6 +214,31 @@ class AlienInvasion:
 
         pygame.mouse.set_visible(False)
 
+    def start_new_level(self):
+        self.bullets.empty()
+        self._create_fleet()
+        self.settings.increase_speed()
+
+        self.stats.level += 1
+        self.sb.prep_level()
+
+    def _save_high_score(self):
+        saved_high_score = self.stats.check_high_score()
+        if self.stats.high_score > saved_high_score:
+            path = Path('high_score.json')
+            contents = json.dumps(self.stats.high_score)
+            path.write_text(contents)
+
+    def restart_game(self):
+        self.difficulty_chosen = False
+        self.game_active = False
+        pygame.mouse.set_visible(True)
+
+    def end_game(self):
+        self._save_high_score()
+        
+        sys.exit()
+
     def _update_screen(self):
         self.screen.fill(self.settings.bg_color)
         self.player.blitme()
@@ -174,8 +246,15 @@ class AlienInvasion:
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
 
+        self.sb.show_score()
+
         if not self.game_active:
-            self.start_button.draw_button()
+            if not self.difficulty_chosen:
+                self.easy_button.draw_button()
+                self.medium_button.draw_button()
+                self.hard_button.draw_button()
+            if self.difficulty_chosen:
+                self.start_button.draw_button()
         
         pygame.display.flip()
 

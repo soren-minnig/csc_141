@@ -1,4 +1,6 @@
-# 6: took a decent amount of effort but I eventually got the hang of it
+# 2: relatively simple
+# This works most of the time...
+# Note: it gets absurdly fast for testing purposes
 import sys
 from time import sleep
 import pygame
@@ -66,7 +68,8 @@ class Rectangle(Sprite):
 
     def update(self):
         self.direction = game.direction
-        self.y += 2 * self.direction
+        self.speed = game.speed
+        self.y += self.speed * self.direction
         self.rect.y = self.y
 
     def check_edges(self):
@@ -134,6 +137,7 @@ class TargetPractice:
         self.counter = 0
 
         self.direction = 1
+        self.speed = 1
 
         self.player = Player(self)
         self.target = Rectangle(self)
@@ -177,6 +181,7 @@ class TargetPractice:
         self.target.center_target()
 
         self.direction = 1
+        self.speed = 1
 
         pygame.mouse.set_visible(False)
 
@@ -211,6 +216,7 @@ class TargetPractice:
                     bullet, self.target)
             if collisions:
                 self.counter += 1
+                self.speed *= 2
                 self.bullets.remove(bullet)
 
     def _check_start_button(self, mouse_pos):
@@ -224,6 +230,7 @@ class TargetPractice:
     def _check_target_edges(self):
         if self.target.check_edges():
             self.direction *= -1
+            print("boink")
 
     def _update_screen(self):
         self.screen.fill((255, 235, 235))
