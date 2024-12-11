@@ -1,4 +1,4 @@
-# Should be fully operable but I will make visual changes later
+# Not my final project submission! Check the "final" folder instead
 import sys
 import json
 from pathlib import Path

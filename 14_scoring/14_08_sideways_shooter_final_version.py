@@ -105,7 +105,6 @@ class Enemy(Sprite):
         self.rect.x = self.x
 
     def check_edge(self):
-        # Checking if the raindrop has left the screen
         screen_rect = self.screen.get_rect()
         return (self.rect.right <= screen_rect.left)
     
